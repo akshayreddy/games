@@ -1,5 +1,5 @@
 
-import pygame, random
+import pygame, random, math
 
 # initialize pygame
 pygame.init()
@@ -9,21 +9,24 @@ gameScreenX = 800
 gameScreenY = 600
 
 screen = pygame.display.set_mode((gameScreenX, gameScreenY))
+scoreFont = pygame.font.Font('freesansbold.ttf', 32)
 
 # game title
 pygame.display.set_caption("Galaxy Shooter")
 
 class Spaceship:
-    stepSize = 5
+    stepSize = 0.8
 
     def __init__(self):
         self.bodyX = 50
         self.bodyY = 50
         self.body = pygame.image.load('spaceship.png')
-        self.body  = pygame.transform.scale(self.body, (self.bodyX, self.bodyY))
+        self.body = pygame.transform.scale(self.body, (self.bodyX, self.bodyY))
         self.spaceshipMovement = 'stopped'
         self.positionX = 400
         self.positionY = 500
+        self.bullets = []
+        self.score = 0
 
     def addToScreen(self):
         screen.blit(self.body, (self.positionX, self.positionY))
@@ -38,10 +41,13 @@ class Spaceship:
         if self.positionX + self.stepSize < gameScreenX - self.bodyX:
             self.positionX =  self.positionX + self.stepSize
 
-
+    # fire a bullet
+    def fire(self):
+        bullet = Bullet(self.positionX, self.positionY)
+        self.bullets.append(bullet)
 
 class Enemy:
-    stepSize = 2
+    stepSize = 0.4
 
     def __init__(self):
         self.bodyX = 50
@@ -68,12 +74,42 @@ class Enemy:
         elif self.positionX > gameScreenX - self.bodyX:
             self.enemyMovement = 'left'
 
+    def destroyed(self):
+        self.body  = pygame.transform.scale(self.body, (10, 10))
+
+
+class Bullet:
+    stepSize = 1
+
+    def __init__(self, x, y):
+        self.bodyX = 25
+        self.bodyY = 25
+        self.body = pygame.image.load('bullet.png')
+        self.body  = pygame.transform.scale(self.body, (self.bodyX, self.bodyY))
+        self.positionX = x
+        self.positionY = y
+    
+    def addToScreen(self):
+        screen.blit(self.body, (self.positionX, self.positionY))
+
+    # move towards the enemy
+    def move(self):
+        self.positionY = self.positionY - self.stepSize
+        self.addToScreen()
 
 def getNewBackgroundColor():
-    r = random.randint(30, 50)
-    g = random.randint(50, 70)
-    b = random.randint(50, 70)
-    return (r, g, b)
+    r = random.randint(20, 30)
+    # g = random.randint(50, 70)
+    # b = random.randint(50, 70)
+    return (r, 20, 20)
+
+def euclidianDistance(x1, x2, y1, y2):
+    distance = math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
+    return distance
+
+def showScore(score):
+    scoreComponent = scoreFont.render("Score: " + str(score), True, (255, 255, 255))
+    screen.blit(scoreComponent, (10, gameScreenY - 40))
 
 running = True
 spaceship = Spaceship()
@@ -94,6 +130,9 @@ while running:
             if event.key == pygame.K_RIGHT:
                 spaceship.spaceshipMovement = 'right'
 
+            if event.key == pygame.K_a:
+                spaceship.fire()
+
         if event.type == pygame.KEYUP:   
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 spaceship.spaceshipMovement = 'stopped'
@@ -106,11 +145,27 @@ while running:
     # add spcaeship on the screen
     spaceship.addToScreen()
 
-    if len(enemies) < 10:
+    # ensure min number of enemies
+    if len(enemies) < 6:
         enemies.append(Enemy())
     
     for enemy in enemies:
         enemy.move()
+
+    # fire the bullets and remove when out of the game space
+    for bullet in spaceship.bullets:
+        bullet.move()
+        if bullet.positionY < 0:
+            spaceship.bullets.remove(bullet)
+        
+        # if the bullet hits any enemy
+        for enemy in enemies:
+            hitDistance = euclidianDistance(enemy.positionX, bullet.positionX, enemy.positionY, bullet.positionY)
+            if hitDistance < 30:
+                enemies.remove(enemy)
+                spaceship.score = spaceship.score + 1
+    
+    showScore(spaceship.score)
         
     pygame.display.update()
 
