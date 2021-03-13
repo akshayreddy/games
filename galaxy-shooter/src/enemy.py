@@ -12,7 +12,7 @@ class Enemy:
 
         self.bodyX = 50
         self.bodyY = 50
-        self.body = pygame.image.load('rocket.png')
+        self.body = pygame.image.load('../assets/spaceship4.svg')
         self.body = pygame.transform.rotate(self.body, 180)
         self.body  = pygame.transform.scale(self.body, (self.bodyX, self.bodyY))
         self.enemyMovement = 'left'
@@ -42,7 +42,7 @@ class Enemy:
     def canFire(self):
         # check if the enemy can fire 
         currentTime = datetime.now()
-        if (currentTime - self.lastBulletFiredTime).total_seconds() > 10 :
+        if (currentTime - self.lastBulletFiredTime).total_seconds() > random.randint(5, 10) :
             return True
         else:
             return False
@@ -50,7 +50,7 @@ class Enemy:
     # fire a bullet
     def fire(self):
         if self.canFire():
-            pygame.mixer.Sound('Gun+Silencer.wav').play()
+            pygame.mixer.Sound('../assets/Gun+Silencer.wav').play()
             bullet = EnemyBullet(self.screen, self.positionX, self.positionY)
             self.lastBulletFiredTime = datetime.now()
             self.bullets.append(bullet)
@@ -60,7 +60,7 @@ class SmartEnemy(Enemy):
     # fire a bullet
     def fire(self):
         if self.canFire():
-            pygame.mixer.Sound('Gun+Silencer.wav').play()
+            pygame.mixer.Sound('../assets/Gun+Silencer.wav').play()
             bullet = ChasingBullet(self.screen, self.positionX, self.positionY)
             self.lastBulletFiredTime = datetime.now()
             self.bullets.append(bullet)

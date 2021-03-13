@@ -8,7 +8,7 @@ class Bullet:
         self.screen = screen
         self.bodyX = 25
         self.bodyY = 25
-        self.body = pygame.image.load('bullet.png')
+        self.body = pygame.image.load('../assets/bullet.png')
         self.body  = pygame.transform.scale(self.body, (self.bodyX, self.bodyY))
         self.positionX = positionX
         self.positionY = positionY

@@ -10,7 +10,7 @@ class Spaceship:
         self.screen = screen
         self.bodyX = 50
         self.bodyY = 50
-        self.body = pygame.image.load('spaceship.png')
+        self.body = pygame.image.load('../assets/spaceship1.svg')
         self.body = pygame.transform.scale(self.body, (self.bodyX, self.bodyY))
         self.spaceshipMovement = 'stopped'
         self.positionX = 400
@@ -34,11 +34,11 @@ class Spaceship:
     # fire a bullet
     def fire(self):
         if len(self.bullets) == 0:
-            pygame.mixer.Sound('Gun+Silencer.wav').play()
+            pygame.mixer.Sound('../assets/Gun+Silencer.wav').play()
             bullet = SpaceshipBullet(self.screen, self.positionX, self.positionY)
             self.bullets.append(bullet)
         else:
-            pygame.mixer.Sound('Gun+Reload.wav').play()
+            pygame.mixer.Sound('../assets/Gun+Reload.wav').play()
 
     def rotate(self):
         for i in range(8):

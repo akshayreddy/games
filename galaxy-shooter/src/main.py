@@ -2,6 +2,7 @@
 import pygame, random, math
 from spaceship import Spaceship
 from enemy import Enemy, SmartEnemy
+from star import Star
 
 # initialize pygame
 pygame.init()
@@ -11,23 +12,24 @@ gameScreenX = 800
 gameScreenY = 600
 normalEnemiesCount = 4
 smartEnemiesCount = 1
+startCount = 10
 
 screen = pygame.display.set_mode((gameScreenX, gameScreenY))
 scoreFont = pygame.font.Font('freesansbold.ttf', 32)
 
 # background music
 # Lobo Loco - Insterstellar Icebreaker (ID 1446)
-pygame.mixer.music.load('background.mp3')
+pygame.mixer.music.load('../assets/background.mp3')
 pygame.mixer.music.play(-1)
 
 # game title
 pygame.display.set_caption("Galaxy Shooter")
 
 def getNewBackgroundColor():
-    r = random.randint(20, 30)
+    # r = random.randint(20, 30)
     # g = random.randint(50, 70)
     # b = random.randint(50, 70)
-    return (r, 20, 20)
+    return (19, 34, 59)
 
 def euclidianDistance(x1, x2, y1, y2):
     distance = math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
@@ -41,10 +43,19 @@ running = True
 spaceship = Spaceship(screen, gameScreenX, gameScreenY)
 enemies = []
 smartEnemies = []
+stars = []
 
 while running:
 
+    # background
     screen.fill(getNewBackgroundColor())
+    if len(stars) < startCount:
+        stars.append(Star(screen, gameScreenX, gameScreenY))
+    
+    for star in stars:
+        star.move()
+        if star.positionY > gameScreenY:
+            stars.remove(star)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -92,7 +103,7 @@ while running:
             hitDistance = euclidianDistance(spaceship.positionX, bullet.positionX, 
                                             spaceship.positionY, bullet.positionY)
             if hitDistance < 30:
-                pygame.mixer.Sound('Gun+Reload.wav').play()
+                pygame.mixer.Sound('../assets/Gun+Reload.wav').play()
                 enemy.bullets.remove(bullet)
                 spaceship.rotate()
 
@@ -104,7 +115,10 @@ while running:
     for bullet in spaceship.bullets:
         bullet.move()
         if bullet.positionY < 0:
-            spaceship.bullets.remove(bullet)
+            try:
+                spaceship.bullets.remove(bullet)
+            except ValueError as e:
+                print('bullet was already removed') 
         
         # if the bullet hits any enemy
         for enemy in enemies:
