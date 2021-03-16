@@ -17,6 +17,7 @@ class Spaceship:
         self.positionY = 500
         self.bullets = []
         self.score = 0
+        self.health = 100
 
     def addToScreen(self):
         self.screen.blit(self.body, (self.positionX, self.positionY))
