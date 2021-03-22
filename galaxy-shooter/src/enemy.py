@@ -57,6 +57,13 @@ class Enemy:
 
 
 class SmartEnemy(Enemy):
+
+    def __init__(self, screen, gameScreenX, gameScreenY):
+        super().__init__(screen, gameScreenX, gameScreenY)
+        self.body = pygame.image.load('../assets/rocket.svg')
+        self.body = pygame.transform.rotate(self.body, 180)
+        self.body  = pygame.transform.scale(self.body, (self.bodyX, self.bodyY))
+        
     # fire a bullet
     def fire(self):
         if self.canFire():

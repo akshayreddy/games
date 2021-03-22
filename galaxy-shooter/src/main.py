@@ -137,16 +137,24 @@ class Game:
                     print('bullet was already removed') 
             
             # if the bullet hits any enemy
-            for enemy in self.enemies:
+            for enemy in self.enemies + self.smartEnemies:
                 hitDistance = self.euclidianDistance(enemy.positionX, bullet.positionX, 
                                                 enemy.positionY, bullet.positionY)
                 if hitDistance < 30:
-                    self.enemies.remove(enemy)
+                    if type(enemy).__name__ == 'SmartEnemy':
+                        self.smartEnemies.remove(enemy)
+                        self.spaceship.score = self.spaceship.score + 5
+                    else:
+                        self.enemies.remove(enemy)
+                        self.spaceship.score = self.spaceship.score + 1
                     self.spaceship.bullets.remove(bullet)
-                    self.spaceship.score = self.spaceship.score + 1
+
         
         self.showScore(self.spaceship.score)
         self.showHealth(self.spaceship.health)
+        
+        if self.spaceship.health < 0:
+            self.stop()
 
     def run(self):
         while self.running == True:
