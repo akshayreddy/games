@@ -3,10 +3,6 @@
 This is an attempt to explore the field of artificial intelligence in a fun and engaging way. What better way to do it than developing games!
  
 Over the time the repository will contain a bunch of 2D (mostly) games with a goal to design them with some abstractness and  imbibe a bit of intelligence into the actors.
- 
-``` pip install -r requirement.txt ```
-
-``` python main.py ```
 
 # :video_game: List of games
  
@@ -18,6 +14,10 @@ Over the time the repository will contain a bunch of 2D (mostly) games with a go
 ![](./galaxy-shooter/assets/galaxy-shooter.gif)
  
 Destroy most of the enemies while saving your spaceship from the missiles that at times follow you.
+
+``` pip install -r requirement.txt ```
+
+``` python main.py ```
  
 # :thumbsup: Contribution
  
