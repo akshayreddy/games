@@ -4,7 +4,10 @@ This is an attempt to explore the field of artificial intelligence in a fun and 
  
 Over the time the repository will contain a bunch of 2D (mostly) games with a goal to design them with some abstractness and  imbibe a bit of intelligence into the actors.
  
- 
+``` pip install -r requirement.txt ```
+
+``` python main.py ```
+
 # :video_game: List of games
  
 * [Galaxy Shooter](#-galaxy-shooter)
